@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.UUID;
 
@@ -39,11 +40,20 @@ public class WelcomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button openTestDeskButton = view.findViewById(R.id.openTestDeskButton);
+        Button openDeskByUUIDButton = view.findViewById(R.id.openDeskByUUIDButton);
+        EditText UUID_Input = view.findViewById(R.id.UUID_Input);
         Button exitButton = view.findViewById(R.id.exitButton);
 
         openTestDeskButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             String deskID = UUID.randomUUID().toString().substring(0, 6);
+            bundle.putString(ContentWrapperFragment.OPEN_DESK_REQUEST, deskID);
+            getParentFragmentManager().setFragmentResult(ContentWrapperFragment.OPEN_DESK_REQUEST, bundle);
+        });
+
+        openDeskByUUIDButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            String deskID = UUID_Input.getText().toString();
             bundle.putString(ContentWrapperFragment.OPEN_DESK_REQUEST, deskID);
             getParentFragmentManager().setFragmentResult(ContentWrapperFragment.OPEN_DESK_REQUEST, bundle);
         });

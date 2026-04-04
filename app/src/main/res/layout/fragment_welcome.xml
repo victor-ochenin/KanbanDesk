@@ -14,6 +14,22 @@
         android:text="@string/open_test_desk" />
 
     <Button
+        android:id="@+id/openDeskByUUIDButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/open_desk_by_uuid" />
+
+    <EditText
+        android:id="@+id/UUID_Input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="uuid"
+        android:inputType="text"
+        android:textSize="30sp"
+        android:hint="@string/UUID" />
+
+    <Button
         android:id="@+id/exitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
