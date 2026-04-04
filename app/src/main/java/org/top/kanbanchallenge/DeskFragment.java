@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,8 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeskFragment extends Fragment {
-    protected List<TaskItem> taskList = new ArrayList<>();
-    protected CustomAdapter customAdapter = new CustomAdapter(taskList);
+    protected List<TaskItem> column1Tasks = new ArrayList<>();
+    protected List<TaskItem> column2Tasks = new ArrayList<>();
+    protected List<TaskItem> column3Tasks = new ArrayList<>();
+
+    protected CustomAdapter adapter1;
+    protected CustomAdapter adapter2;
+    protected CustomAdapter adapter3;
+
+    private RecyclerView recyclerView1;
+    private RecyclerView recyclerView2;
+    private RecyclerView recyclerView3;
 
     public DeskFragment() { }
 
@@ -68,19 +79,64 @@ public class DeskFragment extends Fragment {
     }
 
     public void configureRecyclerView(@NonNull View view){
-        RecyclerView recyclerView1 = view.findViewById(R.id.recyclerView1);
-        RecyclerView recyclerView2 = view.findViewById(R.id.recyclerView2);
-        RecyclerView recyclerView3 = view.findViewById(R.id.recyclerView3);
+        recyclerView1 = view.findViewById(R.id.recyclerView1);
+        recyclerView2 = view.findViewById(R.id.recyclerView2);
+        recyclerView3 = view.findViewById(R.id.recyclerView3);
 
         recyclerView1.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView3.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerView1.setAdapter(customAdapter);
+        adapter1 = new CustomAdapter(column1Tasks);
+        adapter2 = new CustomAdapter(column2Tasks);
+        adapter3 = new CustomAdapter(column3Tasks);
+
+        recyclerView1.setAdapter(adapter1);
+        recyclerView2.setAdapter(adapter2);
+        recyclerView3.setAdapter(adapter3);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        recyclerView1.addItemDecoration(dividerItemDecoration);
+        recyclerView2.addItemDecoration(dividerItemDecoration);
+        recyclerView3.addItemDecoration(dividerItemDecoration);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView1);
     }
 
     public void onCreateTaskClick(View view) {
-        taskList.add(new TaskItem("Задача1", "Доделать приложение"));
-        customAdapter.updateData(new ArrayList<>(taskList));
+        column1Tasks.add(new TaskItem("Задача1", "Доделать приложение"));
+        adapter1.notifyItemInserted(column1Tasks.size() - 1);
+    }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getBindingAdapterPosition();
+            int toPosition = target.getBindingAdapterPosition();
+            adapter1.moveItem(fromPosition, toPosition);
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
+    private List<TaskItem> getListForRecyclerView(RecyclerView rv) {
+        if (rv == recyclerView1) return column1Tasks;
+        if (rv == recyclerView2) return column2Tasks;
+        if (rv == recyclerView3) return column3Tasks;
+        return null;
+    }
+
+    private CustomAdapter getAdapterForRecyclerView(RecyclerView rv) {
+        if (rv == recyclerView1) return adapter1;
+        if (rv == recyclerView2) return adapter2;
+        if (rv == recyclerView3) return adapter3;
+        return null;
     }
 }
