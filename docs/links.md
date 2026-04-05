@@ -8,3 +8,4 @@ https://www.geeksforgeeks.org/android/how-to-add-drag-and-drop-feature-in-androi
 
 https://stackoverflow.com/questions/63068519/getadapterposition-is-deprecated - Метод getAdapterPosition() устарел
 
+https://developer.android.com/develop/ui/views/components/dialogs?hl=ru - Views

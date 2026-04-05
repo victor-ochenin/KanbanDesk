@@ -1,10 +1,12 @@
 package org.top.kanbanchallenge;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -100,43 +102,97 @@ public class DeskFragment extends Fragment {
         recyclerView2.addItemDecoration(dividerItemDecoration);
         recyclerView3.addItemDecoration(dividerItemDecoration);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView1);
+        ItemTouchHelper.SimpleCallback simpleCallback1 = createCallback(adapter1, column1Tasks, column1Tasks);
+        ItemTouchHelper.SimpleCallback simpleCallback2 = createCallback(adapter2, column2Tasks, column2Tasks);
+        ItemTouchHelper.SimpleCallback simpleCallback3 = createCallback(adapter3, column3Tasks, column3Tasks);
+
+        ItemTouchHelper itemTouchHelper1 = new ItemTouchHelper(simpleCallback1);
+        ItemTouchHelper itemTouchHelper2 = new ItemTouchHelper(simpleCallback2);
+        ItemTouchHelper itemTouchHelper3 = new ItemTouchHelper(simpleCallback3);
+
+        itemTouchHelper1.attachToRecyclerView(recyclerView1);
+        itemTouchHelper2.attachToRecyclerView(recyclerView2);
+        itemTouchHelper3.attachToRecyclerView(recyclerView3);
+    }
+
+    private ItemTouchHelper.SimpleCallback createCallback(CustomAdapter adapter, List<TaskItem> sourceList, List<TaskItem> targetList) {
+        return new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getBindingAdapterPosition();
+                int toPosition = target.getBindingAdapterPosition();
+                adapter.moveItem(fromPosition, toPosition);
+                return true;
+
+//                RecyclerView sourceRV = (RecyclerView) viewHolder.itemView.getParent();
+//                RecyclerView targetRV = (RecyclerView) target.itemView.getParent();
+//
+//                List<TaskItem> sourceList = getListForRecyclerView(sourceRV);
+//                List<TaskItem> targetList = getListForRecyclerView(targetRV);
+//                CustomAdapter sourceAdapter = getAdapterForRecyclerView(sourceRV);
+//                CustomAdapter targetAdapter = getAdapterForRecyclerView(targetRV);
+//
+//                if (sourceRV == targetRV) {
+//                    sourceAdapter.moveItem(fromPosition, toPosition);
+//                    return true;
+//                }
+//
+//                if (fromPosition < sourceList.size()) {
+//                    TaskItem item = sourceList.remove(fromPosition);
+//                    int safeToPosition = Math.min(toPosition, targetList.size());
+//                    targetList.add(safeToPosition, item);
+//
+//                    sourceAdapter.notifyItemRemoved(fromPosition);
+//                    targetAdapter.notifyItemInserted(safeToPosition);
+//                    return true;
+//                }
+//
+//                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        };
     }
 
     public void onCreateTaskClick(View view) {
-        column1Tasks.add(new TaskItem("Задача1", "Доделать приложение"));
-        adapter1.notifyItemInserted(column1Tasks.size() - 1);
+        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.create_task, null);
+        EditText headerEdit = dialogView.findViewById(R.id.taskHeaderEditText);
+        EditText descriptionEdit = dialogView.findViewById(R.id.taskDescriptionEditText);
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.createTask))
+                .setView(dialogView)
+                .setPositiveButton(getString(R.string.save), (dialog, which) -> {
+                    String header = headerEdit.getText().toString().trim();
+                    String description = descriptionEdit.getText().toString().trim();
+                    if (!header.isEmpty() || !description.isEmpty()) {
+                        column1Tasks.add(new TaskItem(
+                                header,
+                                description
+                        ));
+                        adapter1.notifyItemInserted(column1Tasks.size() - 1);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
-
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            int fromPosition = viewHolder.getBindingAdapterPosition();
-            int toPosition = target.getBindingAdapterPosition();
-            adapter1.moveItem(fromPosition, toPosition);
-            return true;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-        }
-    };
-
-    private List<TaskItem> getListForRecyclerView(RecyclerView rv) {
-        if (rv == recyclerView1) return column1Tasks;
-        if (rv == recyclerView2) return column2Tasks;
-        if (rv == recyclerView3) return column3Tasks;
-        return null;
-    }
-
-    private CustomAdapter getAdapterForRecyclerView(RecyclerView rv) {
-        if (rv == recyclerView1) return adapter1;
-        if (rv == recyclerView2) return adapter2;
-        if (rv == recyclerView3) return adapter3;
-        return null;
-    }
+//    private List<TaskItem> getListForRecyclerView(RecyclerView rv) {
+//        if (rv == recyclerView1) return column1Tasks;
+//        if (rv == recyclerView2) return column2Tasks;
+//        if (rv == recyclerView3) return column3Tasks;
+//        return null;
+//    }
+//
+//    private CustomAdapter getAdapterForRecyclerView(RecyclerView rv) {
+//        if (rv == recyclerView1) return adapter1;
+//        if (rv == recyclerView2) return adapter2;
+//        if (rv == recyclerView3) return adapter3;
+//        return null;
+//    }
 }
