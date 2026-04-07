@@ -1,5 +1,6 @@
 package org.top.kanbanchallenge.thingsForRecyclerView
 
+import android.content.ClipData
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +11,21 @@ import org.top.kanbanchallenge.R
 class CustomAdapter(private var dataSet: MutableList<TaskItem>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
-    init {
-        setHasStableIds(true)
-    }
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val headerTextView: TextView = view.findViewById(R.id.headerTextView)
         val bodyTextView: TextView = view.findViewById(R.id.textView)
-    }
 
-    override fun getItemId(position: Int): Long {
-        return dataSet[position].hashCode().toLong()
+        init {
+            view.setOnLongClickListener {
+                val item = dataSet[adapterPosition]
+                item.sourceAdapter = this@CustomAdapter
+
+                val shadow = View.DragShadowBuilder(view)
+
+                view.startDragAndDrop(null, shadow, item, 0)
+                true
+            }
+        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -42,5 +47,19 @@ class CustomAdapter(private var dataSet: MutableList<TaskItem>) :
         val item = dataSet.removeAt(fromPosition)
         dataSet.add(toPosition, item)
         notifyItemMoved(fromPosition, toPosition)
+    }
+
+    fun remove(item: TaskItem) {
+        val index = dataSet.indexOf(item)
+        if (index != -1) {
+            dataSet.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
+    fun add(item: TaskItem) {
+        item.sourceAdapter = this
+        dataSet.add(item)
+        notifyItemInserted(dataSet.size - 1)
     }
 }

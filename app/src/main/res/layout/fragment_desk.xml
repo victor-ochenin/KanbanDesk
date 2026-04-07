@@ -1,105 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".DeskFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Верх: заголовок -->
+    <TextView
+        android:id="@+id/deskTitleTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
+        android:textSize="30sp"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/actionButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/deskTitleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="30sp"/>
+    <!-- Кнопка -->
+    <Button
+        android:id="@+id/actionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/createTask"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="@id/deskTitleTextView"
+        app:layout_constraintBottom_toBottomOf="@id/deskTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
-            android:id="@+id/actionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/createTask"/>
-    </LinearLayout>
+    <!-- ===== Колонка 1 ===== -->
+    <TextView
+        android:id="@+id/columnTitle1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/table1"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/deskTitleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/columnTitle2" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView1"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toBottomOf="@id/columnTitle1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/columnTitle1"
+        app:layout_constraintEnd_toEndOf="@id/columnTitle1" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+    <!-- ===== Колонка 2 ===== -->
+    <TextView
+        android:id="@+id/columnTitle2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/table2"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="@id/columnTitle1"
+        app:layout_constraintStart_toEndOf="@id/columnTitle1"
+        app:layout_constraintEnd_toStartOf="@id/columnTitle3" />
 
-            <TextView
-                android:id="@+id/columnTitle1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/table1"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="8dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/columnTitle2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/columnTitle2"
+        app:layout_constraintEnd_toEndOf="@id/columnTitle2" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
+    <!-- ===== Колонка 3 ===== -->
+    <TextView
+        android:id="@+id/columnTitle3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/table3"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="@id/columnTitle1"
+        app:layout_constraintStart_toEndOf="@id/columnTitle2"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/columnTitle3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/columnTitle3"
+        app:layout_constraintEnd_toEndOf="@id/columnTitle3" />
 
-            <TextView
-                android:id="@+id/columnTitle2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/table2"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="8dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/columnTitle3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/table3"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="8dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
